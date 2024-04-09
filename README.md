@@ -21,3 +21,11 @@
 ```bash
  sh deploy.sh
 ```
+
+```bash
+ docker exec task-management php artisan passport:keys
+```
+
+```bash
+ docker exec task-management php artisan passport:client --password
+```
