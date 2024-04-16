@@ -5,7 +5,7 @@ namespace App\Services\Task;
 use App\DTO\Task\CreateTaskDTO;
 use App\DTO\Task\TaskFiltersDTO;
 use App\DTO\Task\UpdateTaskDTO;
-use App\Entities\TaskEntity;
+use App\Responses\TaskResponse;
 use App\Events\Task\UserAssignedEvent;
 use App\Repositories\Task\TaskRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -17,9 +17,9 @@ readonly class TaskService {
 
     /**
      * @param CreateTaskDTO $createTaskDTO
-     * @return TaskEntity
+     * @return TaskResponse
      */
-    public function create(CreateTaskDTO $createTaskDTO): TaskEntity {
+    public function create(CreateTaskDTO $createTaskDTO): TaskResponse {
         $task = $this->taskRepository->create($createTaskDTO);
 
         if ($createTaskDTO->assignedUserId !== null) {
@@ -40,18 +40,18 @@ readonly class TaskService {
 
     /**
      * @param int $id
-     * @return TaskEntity
+     * @return TaskResponse
      */
-    public function find(int $id): TaskEntity {
+    public function find(int $id): TaskResponse {
         return $this->taskRepository->find($id);
     }
 
     /**
      * @param int $id
      * @param UpdateTaskDTO $updateTaskDTO
-     * @return TaskEntity
+     * @return TaskResponse
      */
-    public function update(int $id, UpdateTaskDTO $updateTaskDTO): TaskEntity {
+    public function update(int $id, UpdateTaskDTO $updateTaskDTO): TaskResponse {
         $oldAssignedUserId = null;
 
         if ($updateTaskDTO->assignedUserId !== null) {
@@ -77,7 +77,7 @@ readonly class TaskService {
 
     /**
      * @param TaskFiltersDTO $filters
-     * @return TaskEntity[]
+     * @return TaskResponse[]
      */
     public function getByFilter(TaskFiltersDTO $filters): array {
         return $this->taskRepository->getByFilter($filters);

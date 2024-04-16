@@ -2,12 +2,12 @@
 
 namespace App\Http\Resources;
 
-use App\Entities\UserEntity;
+use App\Responses\UserResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property-read UserEntity $resource
+ * @property-read UserResponse $resource
  */
 class UserResource extends JsonResource
 {

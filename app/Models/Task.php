@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Entities\TaskEntity;
+use App\Responses\TaskResponse;
 use App\Enums\TaskStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

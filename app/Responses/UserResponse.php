@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Entities;
+namespace App\Responses;
 
 use App\Models\User;
 use Illuminate\Notifications\Notifiable;
 
-readonly class UserEntity implements Entity
+readonly class UserResponse
 {
     use Notifiable;
 
@@ -30,9 +30,9 @@ readonly class UserEntity implements Entity
         return $this->email;
     }
 
-    public static function fromModel(User $user): UserEntity
+    public static function fromModel(User $user): UserResponse
     {
-        return new UserEntity(
+        return new UserResponse(
             id: $user->id,
             name: $user->name,
             email: $user->email,

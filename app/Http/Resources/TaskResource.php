@@ -2,12 +2,12 @@
 
 namespace App\Http\Resources;
 
-use App\Entities\TaskEntity;
+use App\Responses\TaskResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property TaskEntity $resource
+ * @property TaskResponse $resource
  */
 class TaskResource extends JsonResource
 {

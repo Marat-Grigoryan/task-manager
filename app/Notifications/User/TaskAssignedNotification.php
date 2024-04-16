@@ -2,7 +2,7 @@
 
 namespace App\Notifications\User;
 
-use App\Entities\TaskEntity;
+use App\Responses\TaskResponse;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -14,7 +14,7 @@ class TaskAssignedNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(public TaskEntity $task)
+    public function __construct(public TaskResponse $task)
     {
         //
     }

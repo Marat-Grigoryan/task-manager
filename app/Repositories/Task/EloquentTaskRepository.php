@@ -5,14 +5,14 @@ namespace App\Repositories\Task;
 use App\DTO\Task\CreateTaskDTO;
 use App\DTO\Task\TaskFiltersDTO;
 use App\DTO\Task\UpdateTaskDTO;
-use App\Entities\TaskEntity;
+use App\Responses\TaskResponse;
 use App\Models\Task;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 
 class EloquentTaskRepository implements TaskRepository
 {
-    public function create(CreateTaskDTO $createTaskDTO): TaskEntity
+    public function create(CreateTaskDTO $createTaskDTO): TaskResponse
     {
         $task = new Task();
 
@@ -26,19 +26,19 @@ class EloquentTaskRepository implements TaskRepository
 
         $task->load('assignedUser');
 
-        return TaskEntity::fromModel($task);
+        return TaskResponse::fromModel($task);
     }
 
     /**
      * @param int $id
-     * @return TaskEntity
+     * @return TaskResponse
      */
-    public function find(int $id): TaskEntity
+    public function find(int $id): TaskResponse
     {
         /** @var Task $task */
         $task = Task::query()->with(['assignedUser'])->findOrFail($id);
 
-        return TaskEntity::fromModel($task);
+        return TaskResponse::fromModel($task);
     }
 
     /**
@@ -50,12 +50,12 @@ class EloquentTaskRepository implements TaskRepository
     {
         $tasks = Task::query()->forPage($page)->paginate($perPage);
 
-        $taskEntities = array_map(function ($task) {
-            return TaskEntity::fromModel($task);
+        $taskResponses = array_map(function ($task) {
+            return TaskResponse::fromModel($task);
         }, $tasks->items());
 
         return new LengthAwarePaginator(
-            $taskEntities,
+            $taskResponses,
             $tasks->total(),
             $tasks->perPage(),
             $tasks->currentPage(),
@@ -63,7 +63,7 @@ class EloquentTaskRepository implements TaskRepository
         );
     }
 
-    public function update(int $id, UpdateTaskDTO $updateTaskDTO): TaskEntity
+    public function update(int $id, UpdateTaskDTO $updateTaskDTO): TaskResponse
     {
         /** @var Task $task */
         $task = Task::query()->findOrFail($id);
@@ -92,7 +92,7 @@ class EloquentTaskRepository implements TaskRepository
 
         $task->load('assignedUser');
 
-        return TaskEntity::fromModel($task);
+        return TaskResponse::fromModel($task);
     }
 
     public function delete(int $id): void
@@ -102,7 +102,7 @@ class EloquentTaskRepository implements TaskRepository
 
     /**
      * @param TaskFiltersDTO $filters
-     * @return TaskEntity[]
+     * @return TaskResponse[]
      */
     public function getByFilter(TaskFiltersDTO $filters): array
     {
@@ -132,7 +132,7 @@ class EloquentTaskRepository implements TaskRepository
             $tasksQuery->where('overdue_notification_count', '<=', $filters->maxOverdueNotificationCount);
         }
 
-        return $tasksQuery->get()->map(fn(Task $task) => TaskEntity::fromModel($task))->all();
+        return $tasksQuery->get()->map(fn(Task $task) => TaskResponse::fromModel($task))->all();
     }
 
     /**

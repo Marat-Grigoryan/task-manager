@@ -2,7 +2,7 @@
 
 namespace App\Notifications\Task;
 
-use App\Entities\TaskEntity;
+use App\Responses\TaskResponse;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -15,7 +15,7 @@ class OverdueTaskNotification extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
-    public function __construct(public TaskEntity $task)
+    public function __construct(public TaskResponse $task)
     {
         //
     }

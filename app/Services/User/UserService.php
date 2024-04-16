@@ -3,7 +3,7 @@
 namespace App\Services\User;
 
 use App\DTO\User\CreateUserDTO;
-use App\Entities\UserEntity;
+use App\Responses\UserResponse;
 use App\Repositories\User\UserRepository;
 
 readonly class UserService
@@ -16,9 +16,9 @@ readonly class UserService
      * @param string $name
      * @param string $email
      * @param string $password
-     * @return UserEntity
+     * @return UserResponse
      */
-    public function create(string $name, string $email, string $password): UserEntity
+    public function create(string $name, string $email, string $password): UserResponse
     {
         $createUserDTO = new CreateUserDTO(
             name: $name,
@@ -31,9 +31,9 @@ readonly class UserService
 
     /**
      * @param int $id
-     * @return UserEntity
+     * @return UserResponse
      */
-    public function find(int $id): UserEntity
+    public function find(int $id): UserResponse
     {
         return $this->userRepository->find($id);
     }

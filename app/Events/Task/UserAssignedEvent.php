@@ -2,7 +2,7 @@
 
 namespace App\Events\Task;
 
-use App\Entities\TaskEntity;
+use App\Responses\TaskResponse;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -14,5 +14,5 @@ class UserAssignedEvent
     /**
      * Create a new event instance.
      */
-    public function __construct(public TaskEntity $task) {}
+    public function __construct(public TaskResponse $task) {}
 }

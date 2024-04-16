@@ -3,16 +3,16 @@
 namespace App\Repositories\User;
 
 use App\DTO\User\CreateUserDTO;
-use App\Entities\UserEntity;
+use App\Responses\UserResponse;
 use App\Models\User;
 
 class EloquentUserRepository implements UserRepository
 {
     /**
      * @param CreateUserDTO $createUserDTO
-     * @return UserEntity
+     * @return UserResponse
      */
-    public function create(CreateUserDTO $createUserDTO): UserEntity
+    public function create(CreateUserDTO $createUserDTO): UserResponse
     {
         $user = new User();
         $user->name = $createUserDTO->name;
@@ -20,18 +20,18 @@ class EloquentUserRepository implements UserRepository
         $user->password = $createUserDTO->password;
         $user->save();
 
-        return UserEntity::fromModel($user);
+        return UserResponse::fromModel($user);
     }
 
     /**
      * @param int $id
-     * @return UserEntity
+     * @return UserResponse
      */
-    public function find(int $id): UserEntity
+    public function find(int $id): UserResponse
     {
         /** @var User $user */
         $user = User::query()->findOrFail($id);
 
-        return UserEntity::fromModel($user);
+        return UserResponse::fromModel($user);
     }
 }
