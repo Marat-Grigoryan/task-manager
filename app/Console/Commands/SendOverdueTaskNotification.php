@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\DTO\Task\TaskFiltersDTO;
 use App\Enums\TaskStatusEnum;
+use App\Notifications\Task\OverdueTaskNotification;
 use App\Notifications\User\TaskAssignedNotification;
 use App\Services\Task\TaskService;
 use Illuminate\Console\Command;
@@ -32,16 +33,16 @@ class SendOverdueTaskNotification extends Command
     public function handle(TaskService $taskService): void
     {
         $filterDTO = new TaskFiltersDTO(
-            statuses: [TaskStatusEnum::InProgress],
+            statuses: [TaskStatusEnum::New, TaskStatusEnum::InProgress],
             userAssigned: true,
             dueDateTo: Carbon::now(),
-            maxOverdueNotificationCount: 1
+            maxOverdueNotificationCount: 0
         );
 
-        $tasks = $taskService->getOverdueTasks($filterDTO);
+        $tasks = $taskService->getByFilter($filterDTO);
 
         foreach ($tasks as $task) {
-            Notification::send($task->assignedUser, new TaskAssignedNotification($task));
+            Notification::send($task->assignedUser, new OverdueTaskNotification($task));
             $taskService->incrementOverdueNotificationCount($task->id);
         }
     }

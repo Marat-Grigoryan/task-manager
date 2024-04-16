@@ -79,7 +79,7 @@ readonly class TaskService {
      * @param TaskFiltersDTO $filters
      * @return TaskEntity[]
      */
-    public function getOverdueTasks(TaskFiltersDTO $filters): array {
+    public function getByFilter(TaskFiltersDTO $filters): array {
         return $this->taskRepository->getByFilter($filters);
     }
 

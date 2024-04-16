@@ -132,9 +132,7 @@ class EloquentTaskRepository implements TaskRepository
             $tasksQuery->where('overdue_notification_count', '<=', $filters->maxOverdueNotificationCount);
         }
 
-        return array_map(function ($task) {
-            return TaskEntity::fromModel($task);
-        }, $tasksQuery->get());
+        return $tasksQuery->get()->map(fn(Task $task) => TaskEntity::fromModel($task))->all();
     }
 
     /**

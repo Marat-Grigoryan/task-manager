@@ -2,6 +2,7 @@
 
 namespace App\Notifications\Task;
 
+use App\Entities\TaskEntity;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -14,7 +15,7 @@ class OverdueTaskNotification extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct(public TaskEntity $task)
     {
         //
     }
@@ -35,7 +36,7 @@ class OverdueTaskNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
+                    ->line("Task ({$this->task->name}) is overdue")
                     ->action('Notification Action', url('/'))
                     ->line('Thank you for using our application!');
     }
