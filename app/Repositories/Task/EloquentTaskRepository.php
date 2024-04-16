@@ -2,6 +2,9 @@
 
 namespace App\Repositories\Task;
 
+use App\DTO\Task\CreateTaskDTO;
+use App\DTO\Task\TaskFiltersDTO;
+use App\DTO\Task\UpdateTaskDTO;
 use App\Entities\TaskEntity;
 use App\Models\Task;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -23,7 +26,7 @@ class EloquentTaskRepository implements TaskRepository
 
         $task->load('assignedUser');
 
-        return $task->toEntity();
+        return TaskEntity::fromModel($task);
     }
 
     /**
@@ -35,7 +38,7 @@ class EloquentTaskRepository implements TaskRepository
         /** @var Task $task */
         $task = Task::query()->with(['assignedUser'])->findOrFail($id);
 
-        return $task->toEntity();
+        return TaskEntity::fromModel($task);
     }
 
     /**
@@ -48,7 +51,7 @@ class EloquentTaskRepository implements TaskRepository
         $tasks = Task::query()->forPage($page)->paginate($perPage);
 
         $taskEntities = array_map(function ($task) {
-            return $task->toEntity();
+            return TaskEntity::fromModel($task);
         }, $tasks->items());
 
         return new LengthAwarePaginator(
@@ -89,11 +92,57 @@ class EloquentTaskRepository implements TaskRepository
 
         $task->load('assignedUser');
 
-        return $task->toEntity();
+        return TaskEntity::fromModel($task);
     }
 
     public function delete(int $id): void
     {
         Task::query()->findOrFail($id)->delete();
+    }
+
+    /**
+     * @param TaskFiltersDTO $filters
+     * @return TaskEntity[]
+     */
+    public function getByFilter(TaskFiltersDTO $filters): array
+    {
+        $tasksQuery = Task::query()->with(['assignedUser']);
+
+        if (!empty($filters->statuses)) {
+            $tasksQuery->whereIn('status', $filters->statuses);
+        }
+
+        if ($filters->userAssigned === true) {
+            $tasksQuery->whereNotNull('assigned_user_id');
+        }
+
+        if ($filters->userAssigned === false) {
+            $tasksQuery->whereNull('assigned_user_id');
+        }
+
+        if ($filters->dueDateFrom) {
+            $tasksQuery->where('due_date', '>=', $filters->dueDateFrom);
+        }
+
+        if ($filters->dueDateTo) {
+            $tasksQuery->where('due_date', '<=', $filters->dueDateTo);
+        }
+
+        if (!is_null($filters->maxOverdueNotificationCount)) {
+            $tasksQuery->where('overdue_notification_count', '<=', $filters->maxOverdueNotificationCount);
+        }
+
+        return array_map(function ($task) {
+            return TaskEntity::fromModel($task);
+        }, $tasksQuery->get());
+    }
+
+    /**
+     * @param int $id
+     * @return void
+     */
+    public function incrementOverdueNotificationCount(int $id): void
+    {
+        Task::query()->where('id', $id)->increment('overdue_notification_count');
     }
 }

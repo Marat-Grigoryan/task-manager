@@ -2,8 +2,8 @@
 
 namespace App\Services\User;
 
+use App\DTO\User\CreateUserDTO;
 use App\Entities\UserEntity;
-use App\Repositories\User\CreateUserDTO;
 use App\Repositories\User\UserRepository;
 
 readonly class UserService

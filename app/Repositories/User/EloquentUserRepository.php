@@ -2,6 +2,7 @@
 
 namespace App\Repositories\User;
 
+use App\DTO\User\CreateUserDTO;
 use App\Entities\UserEntity;
 use App\Models\User;
 
@@ -19,7 +20,7 @@ class EloquentUserRepository implements UserRepository
         $user->password = $createUserDTO->password;
         $user->save();
 
-        return $user->toEntity();
+        return UserEntity::fromModel($user);
     }
 
     /**
@@ -31,6 +32,6 @@ class EloquentUserRepository implements UserRepository
         /** @var User $user */
         $user = User::query()->findOrFail($id);
 
-        return $user->toEntity();
+        return UserEntity::fromModel($user);
     }
 }

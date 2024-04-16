@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Entities\HasEntity;
 use App\Entities\UserEntity;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,7 +22,7 @@ use Laravel\Passport\HasApiTokens;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-class User extends Authenticatable implements HasEntity
+class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens;
 
@@ -48,17 +47,5 @@ class User extends Authenticatable implements HasEntity
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    /**
-     * @return UserEntity
-     */
-    public function toEntity(): UserEntity
-    {
-        return new UserEntity(
-            id: $this->id,
-            name: $this->name,
-            email: $this->email,
-        );
     }
 }

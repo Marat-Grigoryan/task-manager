@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\User;
+namespace App\DTO\User;
 
 readonly class CreateUserDTO {
     public function __construct(

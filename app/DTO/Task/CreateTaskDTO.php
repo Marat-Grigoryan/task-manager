@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Task;
+namespace App\DTO\Task;
 
 use App\Enums\TaskStatusEnum;
 use Carbon\Carbon;
@@ -11,6 +11,6 @@ readonly class CreateTaskDTO {
         public string $description,
         public Carbon $dueDate,
         public TaskStatusEnum $status,
-        public ?int $assignedUserId
+        public ?int $assignedUserId,
     ){}
 }

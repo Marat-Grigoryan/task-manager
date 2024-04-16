@@ -20,5 +20,6 @@ Route::middleware('auth:api')->group(function () {
         Route::get('{id}', [TaskController::class, 'show'])->name('show');
         Route::patch('{id}', [TaskController::class, 'update'])->name('update');
         Route::delete('{id}', [TaskController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/change-assign-user', [TaskController::class, 'changeAssignedUser'])->name('changeAssignUser');
     });
 });

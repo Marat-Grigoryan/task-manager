@@ -3,6 +3,7 @@
 namespace App\Repositories\User;
 
 
+use App\DTO\User\CreateUserDTO;
 use App\Entities\UserEntity;
 
 interface UserRepository

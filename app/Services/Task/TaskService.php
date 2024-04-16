@@ -2,11 +2,13 @@
 
 namespace App\Services\Task;
 
+use App\DTO\Task\CreateTaskDTO;
+use App\DTO\Task\TaskFiltersDTO;
+use App\DTO\Task\UpdateTaskDTO;
 use App\Entities\TaskEntity;
+use App\Events\Task\UserAssignedEvent;
 use App\Repositories\Task\TaskRepository;
-use App\Repositories\Task\CreateTaskDTO as CreateTaskRepositoryDTO;
 use Illuminate\Pagination\LengthAwarePaginator;
-use App\Repositories\Task\UpdateTaskDTO as UpdateTaskRepositoryDTO;
 
 readonly class TaskService {
     public function __construct(
@@ -14,19 +16,17 @@ readonly class TaskService {
     ){}
 
     /**
-     * @param CreateTaskDTO $data
+     * @param CreateTaskDTO $createTaskDTO
      * @return TaskEntity
      */
-    public function create(CreateTaskDTO $data): TaskEntity {
-        $createTaskDTO = new CreateTaskRepositoryDTO(
-            name: $data->name,
-            description: $data->description,
-            dueDate: $data->dueDate,
-            status: $data->status,
-            assignedUserId: $data->assignedUserId,
-        );
+    public function create(CreateTaskDTO $createTaskDTO): TaskEntity {
+        $task = $this->taskRepository->create($createTaskDTO);
 
-        return $this->taskRepository->create($createTaskDTO);
+        if ($createTaskDTO->assignedUserId !== null) {
+            UserAssignedEvent::dispatch($task);
+        }
+
+        return $task;
     }
 
     /**
@@ -46,24 +46,48 @@ readonly class TaskService {
         return $this->taskRepository->find($id);
     }
 
-    public function update(int $id, UpdateTaskDTO $data): TaskEntity {
-        $updateTaskDTO = new UpdateTaskRepositoryDTO(
-            name: $data->name,
-            description: $data->description,
-            dueDate: $data->dueDate,
-            status: $data->status,
-            assignedUserId: $data->assignedUserId,
-            isNamePresent: $data->isNamePresent,
-            isDescriptionPresent: $data->isDescriptionPresent,
-            isDueDatePresent: $data->isDueDatePresent,
-            isStatusPresent: $data->isStatusPresent,
-            isAssignedUserIdPresent: $data->isAssignedUserIdPresent,
-        );
+    /**
+     * @param int $id
+     * @param UpdateTaskDTO $updateTaskDTO
+     * @return TaskEntity
+     */
+    public function update(int $id, UpdateTaskDTO $updateTaskDTO): TaskEntity {
+        $oldAssignedUserId = null;
 
-        return $this->taskRepository->update($id, $updateTaskDTO);
+        if ($updateTaskDTO->assignedUserId !== null) {
+            $oldAssignedUserId = $this->taskRepository->find($id)->assignedUserId;
+        }
+
+        $task = $this->taskRepository->update($id, $updateTaskDTO);
+
+        if ($updateTaskDTO->assignedUserId !== null && $oldAssignedUserId !== $updateTaskDTO->assignedUserId) {
+            UserAssignedEvent::dispatch($task);
+        }
+
+        return $task;
     }
 
+    /**
+     * @param int $id
+     * @return void
+     */
     public function delete(int $id): void {
         $this->taskRepository->delete($id);
+    }
+
+    /**
+     * @param TaskFiltersDTO $filters
+     * @return TaskEntity[]
+     */
+    public function getOverdueTasks(TaskFiltersDTO $filters): array {
+        return $this->taskRepository->getByFilter($filters);
+    }
+
+    /**
+     * @param int $id
+     * @return void
+     */
+    public function incrementOverdueNotificationCount(int $id): void {
+        $this->taskRepository->incrementOverdueNotificationCount($id);
     }
 }

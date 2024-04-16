@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('due_date');
             $table->enum('status', TaskStatusEnum::values());
             $table->foreignId('assigned_user_id')->nullable()->constrained('users');
+            $table->unsignedSmallInteger('overdue_notification_count')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

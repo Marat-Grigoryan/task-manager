@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\API;
 
+use App\DTO\Task\CreateTaskDTO;
+use App\DTO\Task\UpdateTaskDTO;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Task\ChangeAssignedUserRequest;
 use App\Http\Requests\Task\DestroyRequest;
 use App\Http\Requests\Task\IndexRequest;
 use App\Http\Requests\Task\ShowRequest;
 use App\Http\Requests\Task\StoreRequest;
 use App\Http\Requests\Task\UpdateRequest;
 use App\Http\Resources\TaskResource;
-use App\Services\Task\CreateTaskDTO;
 use App\Services\Task\TaskService;
-use App\Services\Task\UpdateTaskDTO;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -46,9 +46,9 @@ class TaskController extends Controller
             assignedUserId: $request->getAssignedUserId()
         );
 
-        $taskEntity = $this->taskService->create($createdTask);
+        $task = $this->taskService->create($createdTask);
 
-        return new TaskResource($taskEntity);
+        return new TaskResource($task);
     }
 
     /**
@@ -57,9 +57,9 @@ class TaskController extends Controller
      */
     public function show(ShowRequest $request): TaskResource
     {
-        $taskEntity = $this->taskService->find($request->getTaskId());
+        $task = $this->taskService->find($request->getTaskId());
 
-        return new TaskResource($taskEntity);
+        return new TaskResource($task);
     }
 
     /**
@@ -81,9 +81,9 @@ class TaskController extends Controller
             isAssignedUserIdPresent: $request->isAssignedUserIdPresent(),
         );
 
-        $taskEntity = $this->taskService->update($request->getId(), $updatedTaskDTO);
+        $task = $this->taskService->update($request->getId(), $updatedTaskDTO);
 
-        return new TaskResource($taskEntity);
+        return new TaskResource($task);
     }
 
     /**
@@ -95,5 +95,21 @@ class TaskController extends Controller
         $this->taskService->delete($request->getId());
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * @param ChangeAssignedUserRequest $request
+     * @return TaskResource
+     */
+    public function changeAssignedUser(ChangeAssignedUserRequest $request): TaskResource
+    {
+        $updateTaskDTO = new UpdateTaskDTO(
+            assignedUserId: $request->getAssignedUserId(),
+            isAssignedUserIdPresent: true
+        );
+
+        $task = $this->taskService->update($request->getId(), $updateTaskDTO);
+
+        return new TaskResource($task);
     }
 }
