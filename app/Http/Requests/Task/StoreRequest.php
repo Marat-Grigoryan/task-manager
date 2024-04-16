@@ -28,7 +28,7 @@ class StoreRequest extends FormRequest
         return [
               'name' => ['required', 'string', 'max:255'],
                 'description' => ['required', 'string'],
-                'due_date' => ['required', 'date', 'date_format:m-d-Y'],
+                'due_date' => ['required', 'date_format:Y-m-d'],
                 'status' => ['required', 'string', Rule::in(TaskStatusEnum::values())],
                 'assigned_user_id' => ['nullable', 'integer', 'exists:users,id'],
         ];
@@ -55,7 +55,7 @@ class StoreRequest extends FormRequest
      */
     public function getDueDate(): Carbon
     {
-        return Carbon::createFromFormat('m-d-Y', $this->get('due_date'));
+        return Carbon::createFromFormat('Y-m-d', $this->get('due_date'));
     }
 
     /**

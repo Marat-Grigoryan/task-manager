@@ -10,11 +10,11 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
 
-Route::post('/users', [UserController::class, 'store'])->name('users.create');
+Route::post('/users', [UserController::class, 'store'])->name('user.create');
 Route::post('/oauth/token', [AccessTokenController::class, 'issueToken']);
 
 Route::middleware('auth:api')->group(function () {
-    Route::prefix('tasks')->as('tasks.')->group(function () {
+    Route::prefix('tasks')->as('task.')->group(function () {
         Route::get('/', [TaskController::class, 'index'])->name('index');
         Route::post('/', [TaskController::class, 'store'])->name('store');
         Route::get('{id}', [TaskController::class, 'show'])->name('show');

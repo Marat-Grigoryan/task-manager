@@ -26,6 +26,7 @@ class TaskResource extends JsonResource
             'status' => $this->resource->status->value,
             'created_at' => $this->resource->createdAt->toDateTimeString(),
             'updated_at' => $this->resource->updatedAt->toDateTimeString(),
+            'assigned_user_id' => $this->resource->assignedUserId,
             'assigned_user' => $this->when(
                 !is_null($this->resource->assignedUser),
                 new UserResource($this->resource->assignedUser),

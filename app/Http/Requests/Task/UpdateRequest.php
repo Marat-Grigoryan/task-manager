@@ -28,7 +28,7 @@ class UpdateRequest extends FormRequest
         return [
             'name' => ['sometimes', 'string', 'max:255'],
             'description' => ['sometimes', 'string'],
-            'due_date' => ['sometimes', 'date', 'date_format:m-d-Y'],
+            'due_date' => ['sometimes', 'date_format:Y-m-d'],
             'status' => ['sometimes', 'string', Rule::in(TaskStatusEnum::values())],
             'assigned_user_id' => ['sometimes', 'nullable', 'integer', Rule::exists('users', 'id')],
         ];
@@ -64,7 +64,7 @@ class UpdateRequest extends FormRequest
     public function getDueDate(): ?Carbon
     {
         return $this->isDueDatePresent()
-            ? Carbon::createFromFormat('m-d-Y', $this->get('due_date'))
+            ? Carbon::createFromFormat('Y-m-d', $this->get('due_date'))
             : null;
     }
 

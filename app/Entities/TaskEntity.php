@@ -16,7 +16,7 @@ readonly class TaskEntity implements Entity
         public TaskStatusEnum $status,
         public Carbon $createdAt,
         public Carbon $updatedAt,
-        public int $assignedUserId,
+        public ?int $assignedUserId,
         public ?UserEntity $assignedUser,
     ){}
 

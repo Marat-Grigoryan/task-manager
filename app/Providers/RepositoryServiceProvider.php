@@ -6,6 +6,7 @@ use App\Repositories\Task\EloquentTaskRepository;
 use App\Repositories\Task\TaskRepository;
 use App\Repositories\User\EloquentUserRepository;
 use App\Repositories\User\UserRepository;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -31,6 +32,6 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        JsonResource::withoutWrapping();
     }
 }
