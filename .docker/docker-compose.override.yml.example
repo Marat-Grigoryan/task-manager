@@ -39,3 +39,11 @@ services:
       - "3307:3306"
     networks:
       - task-management-network
+
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - "1080:1080" # MailCatcher web interface
+      - "1025:1025" # SMTP server
+    networks:
+      - task-management-network

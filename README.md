@@ -34,6 +34,7 @@
 ```bash
  docker exec task-management php artisan passport:client --password
 ```
+- client id and client secret will be generated use them to get the access token
 
 ## testing
 ```bash
@@ -48,4 +49,13 @@
 
 ## api documentation
 https://documenter.getpostman.com/view/3660475/2sA3BkctH2
- 
+
+## mailcatcher
+ http://127.0.0.1:1080/
+
+## commands
+
+### send overdue task notification
+```bash
+ docker exec task-management php artisan app:send-overdue-task-notification
+```
