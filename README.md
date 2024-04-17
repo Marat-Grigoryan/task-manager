@@ -37,7 +37,7 @@
 
 ## testing
 ```bash
- cp .env.testing.example .env
+ cp .env.testing.example .env.testing
 ```
 ```bash
  docker exec task-management php artisan migrate --env=testing
