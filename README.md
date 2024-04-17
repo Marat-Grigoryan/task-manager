@@ -24,9 +24,8 @@
 
 ### application starts at
 
-```HTTP
  http://127.0.0.1:8000
-```
+
 
 ```bash
  docker exec task-management php artisan passport:keys
